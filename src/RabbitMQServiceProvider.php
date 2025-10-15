@@ -6,7 +6,9 @@ use Illuminate\Contracts\Queue\Factory as QueueFactoryContract;
 use Illuminate\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 use MHFereydouni\RabbitMQ\Commands\ConsumeEventMessages;
+use MHFereydouni\RabbitMQ\Commands\ConsumeQueryMessages;
 use MHFereydouni\RabbitMQ\Commands\DeclareEventExchanges;
+use MHFereydouni\RabbitMQ\Commands\DeclareQueryExchanges;
 
 class RabbitMQServiceProvider extends ServiceProvider
 {
@@ -34,6 +36,8 @@ class RabbitMQServiceProvider extends ServiceProvider
             $this->commands([
                 DeclareEventExchanges::class,
                 ConsumeEventMessages::class,
+                DeclareQueryExchanges::class,
+                ConsumeQueryMessages::class,
             ]);
         }
 

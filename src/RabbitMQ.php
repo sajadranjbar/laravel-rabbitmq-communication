@@ -2,6 +2,8 @@
 
 namespace MHFereydouni\RabbitMQ;
 
+use MHFereydouni\RabbitMQ\Query\RabbitMQQueryConsumer;
+use MHFereydouni\RabbitMQ\Query\RabbitMQQueryMessage;
 use PhpAmqpLib\Channel\AMQPChannel;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 
@@ -52,6 +54,15 @@ class RabbitMQ
     public function consume(): RabbitMQConsumer
     {
         return new RabbitMQConsumer($this->channel);
+    }
+    public function queryConsume(): RabbitMQQueryConsumer
+    {
+        return new RabbitMQQueryConsumer($this->channel);
+    }
+
+    public function queryMessage(): RabbitMQQueryMessage
+    {
+        return new RabbitMQQueryMessage($this->channel);
     }
 
     public function __destruct()

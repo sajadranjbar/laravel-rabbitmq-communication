@@ -10,7 +10,7 @@ class RabbitMQDispatcher extends Dispatcher
 {
     public function dispatch($event, $payload = [], $halt = false): ?array
     {
-        if (! $event instanceof ShouldPublish) {
+        if (!$event instanceof ShouldPublish) {
             return parent::dispatch($event, $payload, $halt);
         }
 
@@ -23,8 +23,8 @@ class RabbitMQDispatcher extends Dispatcher
             ->viaExchange(class_basename($event))
             ->when(
                 method_exists($event, 'routingKey'),
-                fn (RabbitMQMessage $message) => $message
-                ->route($event->routingKey())
+                fn(RabbitMQMessage $message) => $message
+                    ->route($event->routingKey())
             )
             ->withPayload(
                 array_map(
@@ -47,4 +47,23 @@ class RabbitMQDispatcher extends Dispatcher
 
         return $property;
     }
+
+    /**
+     * @throws \Exception
+     */
+    public function query(string $exchange, string $routingKey, array $payload = [], float $timeout = 5.0): array
+    {
+        /** @var RabbitMQ $rabbitmq */
+        $rabbitmq = resolve(RabbitMQ::class);
+
+        return $rabbitmq
+            ->queryMessage()
+            ->viaExchange($exchange)
+            ->route($routingKey)
+            ->withPayload($payload)
+            ->persistent()
+            ->publishAndWait($timeout);
+    }
+
+
 }
